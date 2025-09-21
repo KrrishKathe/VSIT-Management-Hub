@@ -14,7 +14,208 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      applications: {
+        Row: {
+          applied_at: string
+          id: string
+          job_posting_id: string
+          status: string
+          student_id: string
+          updated_at: string
+        }
+        Insert: {
+          applied_at?: string
+          id?: string
+          job_posting_id: string
+          status?: string
+          student_id: string
+          updated_at?: string
+        }
+        Update: {
+          applied_at?: string
+          id?: string
+          job_posting_id?: string
+          status?: string
+          student_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "applications_job_posting_id_fkey"
+            columns: ["job_posting_id"]
+            isOneToOne: false
+            referencedRelation: "job_postings"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "applications_student_id_fkey"
+            columns: ["student_id"]
+            isOneToOne: false
+            referencedRelation: "students"
+            referencedColumns: ["user_id"]
+          },
+        ]
+      }
+      job_postings: {
+        Row: {
+          application_deadline: string | null
+          company_name: string
+          created_at: string
+          description: string | null
+          id: string
+          is_active: boolean
+          job_type: string | null
+          location: string | null
+          posted_by: string | null
+          requirements: string[] | null
+          salary_range: string | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          application_deadline?: string | null
+          company_name: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          is_active?: boolean
+          job_type?: string | null
+          location?: string | null
+          posted_by?: string | null
+          requirements?: string[] | null
+          salary_range?: string | null
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          application_deadline?: string | null
+          company_name?: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          is_active?: boolean
+          job_type?: string | null
+          location?: string | null
+          posted_by?: string | null
+          requirements?: string[] | null
+          salary_range?: string | null
+          title?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "job_postings_posted_by_fkey"
+            columns: ["posted_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["user_id"]
+          },
+        ]
+      }
+      profiles: {
+        Row: {
+          created_at: string
+          id: string
+          role: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          role?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          role?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      students: {
+        Row: {
+          about_yourself: string | null
+          certificate_urls: string[] | null
+          college_roll_no: string
+          courses: string[] | null
+          created_at: string
+          email: string
+          expertise: string[] | null
+          full_name: string
+          id: string
+          is_active: boolean
+          past_education: Json | null
+          past_experience: string | null
+          phone: string | null
+          preferred_job_role: string | null
+          profile_image_url: string | null
+          resume_url: string | null
+          skills: string[] | null
+          stream: string
+          updated_at: string
+          user_id: string
+          year: number
+        }
+        Insert: {
+          about_yourself?: string | null
+          certificate_urls?: string[] | null
+          college_roll_no: string
+          courses?: string[] | null
+          created_at?: string
+          email: string
+          expertise?: string[] | null
+          full_name: string
+          id?: string
+          is_active?: boolean
+          past_education?: Json | null
+          past_experience?: string | null
+          phone?: string | null
+          preferred_job_role?: string | null
+          profile_image_url?: string | null
+          resume_url?: string | null
+          skills?: string[] | null
+          stream: string
+          updated_at?: string
+          user_id: string
+          year: number
+        }
+        Update: {
+          about_yourself?: string | null
+          certificate_urls?: string[] | null
+          college_roll_no?: string
+          courses?: string[] | null
+          created_at?: string
+          email?: string
+          expertise?: string[] | null
+          full_name?: string
+          id?: string
+          is_active?: boolean
+          past_education?: Json | null
+          past_experience?: string | null
+          phone?: string | null
+          preferred_job_role?: string | null
+          profile_image_url?: string | null
+          resume_url?: string | null
+          skills?: string[] | null
+          stream?: string
+          updated_at?: string
+          user_id?: string
+          year?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "students_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: true
+            referencedRelation: "profiles"
+            referencedColumns: ["user_id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
