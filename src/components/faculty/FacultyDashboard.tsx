@@ -4,8 +4,6 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
-import { supabase } from "@/integrations/supabase/client";
-import { useAuth } from "@/hooks/useAuth";
 import { Search, Users, GraduationCap, Briefcase, Eye, Download, Filter } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
@@ -28,7 +26,7 @@ interface Student {
 export function FacultyDashboard() {
   const [students, setStudents] = useState<Student[]>([]);
   const [filteredStudents, setFilteredStudents] = useState<Student[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [filterStream, setFilterStream] = useState("all");
   const [filterYear, setFilterYear] = useState("all");
@@ -38,14 +36,11 @@ export function FacultyDashboard() {
     streams: [] as string[],
   });
 
-  const { user } = useAuth();
   const { toast } = useToast();
 
   useEffect(() => {
-    if (user) {
-      loadStudents();
-    }
-  }, [user]);
+    loadStudents();
+  }, []);
 
   useEffect(() => {
     filterStudents();
@@ -55,37 +50,47 @@ export function FacultyDashboard() {
     try {
       setLoading(true);
       
-      // First check if user is faculty
-      const { data: profile } = await supabase
-        .from('profiles')
-        .select('role')
-        .eq('user_id', user?.id)
-        .single();
+      // Mock student data for demo
+      const mockStudents: Student[] = [
+        {
+          id: "1",
+          user_id: "user1",
+          full_name: "John Doe",
+          email: "john.doe@vsit.edu.in",
+          college_roll_no: "2021/CS/001",
+          stream: "Computer Science",
+          year: 3,
+          skills: ["React", "Node.js", "Python"],
+          expertise: ["Web Development", "Machine Learning"],
+          preferred_job_role: "Software Developer",
+          profile_image_url: "",
+          resume_url: "",
+          created_at: new Date().toISOString(),
+        },
+        {
+          id: "2",
+          user_id: "user2",
+          full_name: "Jane Smith",
+          email: "jane.smith@vsit.edu.in",
+          college_roll_no: "2020/IT/015",
+          stream: "Information Technology",
+          year: 4,
+          skills: ["Java", "Spring Boot", "MySQL"],
+          expertise: ["Backend Development", "Database Design"],
+          preferred_job_role: "Backend Developer",
+          profile_image_url: "",
+          resume_url: "",
+          created_at: new Date().toISOString(),
+        }
+      ];
 
-      if (profile?.role !== 'faculty' && profile?.role !== 'admin') {
-        toast({
-          variant: "destructive",
-          title: "Access Denied",
-          description: "You don't have permission to access this dashboard.",
-        });
-        return;
-      }
-
-      const { data, error } = await supabase
-        .from('students')
-        .select('*')
-        .eq('is_active', true)
-        .order('created_at', { ascending: false });
-
-      if (error) throw error;
-
-      setStudents(data || []);
+      setStudents(mockStudents);
       
       // Calculate stats
-      const uniqueStreams = [...new Set(data?.map(s => s.stream) || [])];
+      const uniqueStreams = [...new Set(mockStudents.map(s => s.stream))];
       setStats({
-        totalStudents: data?.length || 0,
-        activeProfiles: data?.filter(s => s.full_name && s.college_roll_no)?.length || 0,
+        totalStudents: mockStudents.length,
+        activeProfiles: mockStudents.filter(s => s.full_name && s.college_roll_no).length,
         streams: uniqueStreams,
       });
 
